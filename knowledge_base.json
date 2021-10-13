@@ -1,0 +1,36 @@
+{
+	"info":
+		{
+			"name": "QnA Bot Default Knowledge Base",
+			"version": "1.0.0",
+			"author": "Mehdi Samsami"
+		},
+	"no_answer": [
+		"Sorry, I don't understand.",
+		"Could you please be more specific?"
+	],
+	"qna": [
+		{
+			"q": ["Hi. How are you?"],
+			"a": ["I'm fine. Thank you"]
+		},
+		{
+			"q": [
+				"Hi!",
+				"Hey",
+				"Hello",
+				"Hey you",
+				"Heyy"
+			],
+			"a": [
+				"Hi.",
+				"Hello",
+				"Hey"
+			]
+		},
+		{
+			"q": ["What's up?"],
+			"a": ["All good. What's up with you?"]
+		}
+	]
+}
