@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Jupyter Notebook
+*.ipynb
+
+# PyCharm
+.idea/
