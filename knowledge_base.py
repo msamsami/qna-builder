@@ -1,8 +1,8 @@
 import streamlit as st
-import pandas as pd
+import sys
 import time
 import json
-# import SessionState
+
 
 # Set page config
 st.set_page_config(page_title="QnA Knowledge Base", layout='centered',
@@ -15,13 +15,14 @@ QnA Bot Knowledge base
 st.caption("You can view and edit the details of your QnA Bot knowledge base here.")
 st.write("")
 
+kb_dir = sys.argv[1]  # Get knowledge base directory from the command line argument
 try:
     # Load the knowledge base
-    with open('knowledge_base.json') as file:
+    with open(kb_dir) as file:
         data = json.load(file)
 except:
     # Throw error
-    st.error("Knowledge base (`knowledge_base.json`) can't be read.")
+    st.error(f"Knowledge base (`{kb_dir}`) can't be read.")
     exit()
 
 st.write("#### Knowledge base information")
