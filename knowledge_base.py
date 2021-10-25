@@ -15,7 +15,6 @@ QnA Bot Knowledge base
 st.caption("You can view and edit the details of your QnA Bot knowledge base here.")
 st.write("")
 
-
 try:
     # Load the knowledge base
     with open('knowledge_base.json') as file:
@@ -62,7 +61,8 @@ def parse(input_):
 st.write("\n")
 st.write("#### Edit questions and answers")
 with st.expander("'I don't know' answers", expanded=True):
-    st.write("When the QnA Bot can't predict a proper answer, one of these answers will be returned:")
+    st.write("When the QnA Bot can't predict a proper answer, one of the following answers will be returned. "
+             "Split the items with a new line.")
     no_answer_data = st.text_area("Answers", value=parse(data['no_answer']), height=70)
 
     if st.button("Save", key="s-idont-know"):
@@ -84,33 +84,27 @@ with st.expander("'I don't know' answers", expanded=True):
                 time.sleep(2.5)
                 st.write("")
 
+
+questions = [None for i in range(len(data['qna']))]
+answers = [None for i in range(len(data['qna']))]
 st.write("\n")
 with st.expander("Questions and answers"):
-    st.write("Edit question and answer pairs. Split items with a new line.")
+    st.write("Edit question and answer pairs. Split the items with a new line.")
 
     # Initialize section columns
     col1, col2 = st.columns(2)
 
     # Display the entries
     for i, item in enumerate(data['qna']):
-        col1.text_area("Question " + str(i+1), value=parse(item['q']), height=50, key="q"+str(i+1))
-        col2.text_area("Answer " + str(i+1), value=parse(item['a']), height=50, key="a"+str(i+1))
+        questions[i] = col1.text_area("Question " + str(i+1), value=parse(item['q']), height=50, key="q"+str(i+1))
+        answers[i] = col2.text_area("Answer " + str(i+1), value=parse(item['a']), height=50, key="a"+str(i+1))
+        col2.markdown("""<div style="height:50px; clear:both;"></div>""", unsafe_allow_html=True)
 
-# # Set session state
-# state = SessionState.get(num_displayed=5)
-#
-# # Config "Display more" button
-# st.write("")
-# if st.button('Display more'):
-#     # Display the next five entries
-#     for i in range(state.num_displayed, state.num_displayed+5):
-#         q_data = data.iloc[i,0]
-#         col1.text_area("Question " + str(i+1), value=q_data, height=120,
-#                        max_chars=None, key="Q"+str(i+1))
-#         a_data = data.iloc[i,1]
-#         col2.text_area("Answer " + str(i+1), value=a_data, height=120,
-#                        max_chars=None, key="A"+str(i+1))
-#
-#     state.num_displayed += 5
-#
-# st.write("1–" + str(state.num_displayed))
+        if col1.button("Save", key=f"save{i}"):
+            # Update the i-th question-answer pair in the knowledge base
+            data['qna'][i]['q'] = parse(questions[i])
+            data['qna'][i]['a'] = parse(answers[i])
+
+            # Save the knowledge base
+            with open('knowledge_base.json', 'w', encoding='utf-8') as file:
+                json.dump(data, file, indent=4)
