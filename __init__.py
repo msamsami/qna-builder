@@ -24,7 +24,7 @@ class QnABot():
             with open(self.kb_dir_) as file:
                 self.data = json.load(file)
         except:
-            FileNotFoundError('Knowledge base file cannot be found.')
+            raise FileNotFoundError('Knowledge base file cannot be found.')
 
         self.kb_name_ = self.data['info']['name']
         self.kb_version_ = self.data['info']['version']
