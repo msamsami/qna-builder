@@ -4,7 +4,7 @@ from numpy import argmax, random
 
 def find_similarity(self, input=""):
     if not self.is_fitted_:
-        RuntimeError('The model is not fitted. Use .fit() method before using .answer()')
+        raise RuntimeError('The model is not fitted. Use .fit() method before using .answer()')
 
     # Extract input statement embedding
     input_embed = self.model.transform([input])
