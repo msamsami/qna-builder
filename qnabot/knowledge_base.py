@@ -2,7 +2,7 @@ import streamlit as st
 import sys
 import time
 import json
-from ._prediction import parse
+from _prediction import parse
 
 
 # Set page config
