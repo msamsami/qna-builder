@@ -2,11 +2,15 @@ import streamlit as st
 import sys
 import time
 import json
+from ._prediction import parse
 
 
 # Set page config
-st.set_page_config(page_title="QnA Knowledge Base", layout='centered',
-                   page_icon='https://qnamaker.azureedge.net/Images/multi-turn.svg')
+st.set_page_config(
+    page_title="QnA Knowledge Base",
+    layout='centered',
+    page_icon='https://qnamaker.azureedge.net/Images/multi-turn.svg'
+)
 
 # Set page title text
 st.title("""
@@ -50,13 +54,6 @@ if st.button("Save", key="s-kb-ginfo"):
             st.error("Something went wrong!")
             time.sleep(2.5)
             st.write("")
-
-
-def parse(input_):
-    if type(input_) is list:
-        return "\n".join(input_)
-    elif type(input_) is str:
-        return input_.split("\n")
 
 
 st.write("\n")
