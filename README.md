@@ -12,8 +12,7 @@ of question-answer pairs to generate (predict) answers for new inputs.
 
 # Install
 
--------------------------
-The easiest way to install the qna-bot is using `pip`:
+The easiest way to install the qna-bot is by using `pip`:
 ```shell
 pip install git+https://github.com/msamsami/qna-bot
 ```
@@ -22,10 +21,8 @@ dependencies and requirements.
 
 # Getting started
 
--------------------------
-
 QnA Bot can be set up and used in four simple steps:
-1. Import **`QnABot`** class
+1. Import `QnABot` class
 
 ```python
 from qnabot import QnABot
@@ -48,7 +45,6 @@ bot.answer("Hey. What's up?")
 
 # Algorithms
 
--------------------------
 Currently, QnA Bot engine supports the following algorithms for similarity-based answer generation:
 - TF-IDF (`bot.model='tfidf'`)
 - Murmurhash3 (`bot.model='murmurhash3'`)
@@ -56,7 +52,6 @@ Currently, QnA Bot engine supports the following algorithms for similarity-based
 
 # Knowledge base editor
 
--------------------------
 By calling `bot.knowledge_base()`, the knowledge base editor window will open up in your web browser
 and allows you to edit your knowledge base by adding, removing, or modifying questions/answers.
 Here you can see a screenshot of the knowledge base editor:
