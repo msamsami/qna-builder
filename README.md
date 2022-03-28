@@ -14,3 +14,10 @@
 Currently, QnA Bot engine supports the following algorithms for similarity-based answer generation:
 - TF-IDF
 - Murmurhash3
+
+By calling `bot.knowledge_base()`, the knowledge base editor window will open up in your web browser and allows you to edit your knowledge base by adding, removing, or modifying questions/answers. Here you can see a screenshot of the knowledge base editor:
+
+<div style="text-align:center">
+<img src="knowledge_base_screenshot.png"
+     alt="QnA Bot Knowledge Base Editor" />
+</div>
