@@ -13,7 +13,7 @@ setup(
     url='https://github.com/msamsami/qna-bot',
     long_description=codecs.open(path.join(path.abspath(path.dirname(__file__)), 'README.md'), encoding='utf-8').read(),
     long_description_content_type='text/markdown',
-    packages=['qna-bot'],
+    packages=['qnabot'],
     classifiers=[
         'Topic :: Probabilistic Classification',
         'Programming Language :: Python :: 3.4',
