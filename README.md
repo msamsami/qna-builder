@@ -30,7 +30,7 @@ from qnabot import QnABot
 
 2. Initialize a bot using a knowledge base
 ```python
-bot = QnABot(kb_dir='knowledge_base.json')
+bot = QnABot(knowledge_base='knowledge_base.json')
 ```
 
 3. Fit the bot engine to the knowledge base
@@ -46,14 +46,28 @@ bot.answer("Hey. What's up?")
 # Algorithms
 
 Currently, QnA Bot engine supports the following algorithms for similarity-based answer generation:
-- TF-IDF (`bot.model='tfidf'`)
-- Murmurhash3 (`bot.model='murmurhash3'`)
+- TF-IDF Vectorization (`model='tfidf'`)
+- Murmurhash3 Vectorization (`model='murmurhash'`)
+- Count Vectorization (`model='count'`)
 
+Supported similarity metrics are as follows:
+- Cosine similarity (`metric='cosine'`)
+- Euclidean distance (`metric='euclidean'`)
+- Manhattan distance (`metric='manhattan'`)
+- Haversine distance (`metric='haversine'`)
 
 # Knowledge base editor
 
-By calling `bot.knowledge_base()`, the knowledge base editor window will open up in your web browser
-and allows you to edit your knowledge base by adding, removing, or modifying questions/answers.
+By calling `knowledge_base_editor()`, the knowledge base editor window will open up in
+your web browser and allows you to edit your knowledge base by adding, removing, or
+modifying questions/answers.
+
+```python
+from qnabot import knowledge_base_editor
+
+knowledge_base_editor('my_knowledge_base.json')
+```
+
 Here you can see a screenshot of the knowledge base editor:
 
 <div style="text-align:center">
