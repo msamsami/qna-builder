@@ -1,8 +1,15 @@
 import streamlit as st
-import sys
 import time
 import json
-from _prediction import parse
+import sys
+from typing import Union
+
+
+def parse(input: Union[list, str]) -> Union[str, list]:
+    if type(input) is list:
+        return "\n".join(input)
+    elif type(input) is str:
+        return input.split("\n")
 
 
 # Set page config
