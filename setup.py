@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name='qna-bot',
-    version='0.0.1',
+    version='0.0.2',
     description='Similarity-based conversational dialog engine for Python.',
     keywords=['python', 'qna', 'chat', 'chatbot', 'conversational', 'dialog'],
     author='Mehdi Samsami',
