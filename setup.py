@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name='qna-bot',
-    version='0.0.2',
+    version='0.0.3',
     description='Similarity-based conversational dialog engine for Python.',
     keywords=['python', 'qna', 'qnabot', 'chat', 'chatbot', 'conversation', 'dialog', 'nlp'],
     author='Mehdi Samsami',
@@ -20,14 +20,15 @@ setup(
     classifiers=[
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Communications :: Chat',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
         'License :: OSI Approved :: MIT License',
     ],
-    python_requires=">=3.4",
+    python_requires=">=3.6",
     install_requires=['scikit-learn==1.0.2'],
     extras_require={
         'knoledge_base_editor': ['streamlit==1.8.0']

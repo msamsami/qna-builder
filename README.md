@@ -30,12 +30,12 @@ from qnabot import QnABot
 
 2. Initialize a bot using a knowledge base
 ```python
-bot = QnABot(knowledge_base='knowledge_base.json')
+bot = QnABot()
 ```
 
 3. Fit the bot engine to the knowledge base
 ```python
-bot.fit()
+bot.fit(knowledge_base='knowledge_base.json')
 ```
 
 4. Generate answers
@@ -46,15 +46,15 @@ bot.answer("Hey. What's up?")
 # Algorithms
 
 Currently, QnA Bot engine supports the following algorithms for similarity-based answer generation:
-- TF-IDF Vectorization (`model='tfidf'`)
-- Murmurhash3 Vectorization (`model='murmurhash'`)
-- Count Vectorization (`model='count'`)
+- TF-IDF Vectorization (`'tfidf'`)
+- Murmurhash3 Vectorization (`'murmurhash'`)
+- Count Vectorization (`'count'`)
 
 Supported similarity metrics are as follows:
-- Cosine similarity (`metric='cosine'`)
-- Euclidean distance (`metric='euclidean'`)
-- Manhattan distance (`metric='manhattan'`)
-- Haversine distance (`metric='haversine'`)
+- Cosine similarity (`'cosine'`)
+- Euclidean distance (`'euclidean'`)
+- Manhattan distance (`'manhattan'`)
+- Haversine distance (`'haversine'`)
 
 # Knowledge base editor
 
