@@ -17,7 +17,12 @@ class QnAKnowledgeBase:
     author: Optional[str] = None  # Knowledge base author name
     file_path: Optional[str] = None  # Knowledge base file path
 
-    _buffer_data: dict = {}
+    _buffer_data: dict = {
+        'data': None,
+        'no_answers': None,
+        'ref_questions': None,
+        'ref_questions_idx': None
+    }
 
     def __init__(self, data: Union[str, dict], type: str = DEFAULT_KNOWLEDGE_BASE_TYPE,  buffer: bool = False):
         """Initializes an instance of the class based on a given knowledge base information.
@@ -36,11 +41,12 @@ class QnAKnowledgeBase:
         if (not buffer) and (not isinstance(data, str)):
             raise ValueError("buffer must be enabled when data is not a file path")
 
-        self.data: Union[str, dict] = data  # Knowledge base file path or information
         self.type: str = type
         self.buffer: bool = buffer
 
-        self._internal_init(self.data)
+        if isinstance(data, str):
+            self.file_path: str = data
+        self._internal_init(data)
 
     @staticmethod
     def _check_schema(data: dict, type: str = DEFAULT_KNOWLEDGE_BASE_TYPE):
@@ -63,7 +69,8 @@ class QnAKnowledgeBase:
         else:
             pass
 
-    def _load(self, data: Union[str, dict], only_no_answers: bool = False, only_ref_questions: bool = False):
+    def _load(self, data: Union[str, dict], only_data: bool = False, only_no_answers: bool = False,
+              only_ref_questions: bool = False):
         """Loads a QnA knowledge from file or Python dictionary.
 
         Args:
@@ -75,6 +82,9 @@ class QnAKnowledgeBase:
                 data: dict = json.load(file)
 
         self._check_schema(data)
+
+        if only_data:
+            return data
 
         no_answers = data['no_answer']
         if only_no_answers:
@@ -92,9 +102,6 @@ class QnAKnowledgeBase:
         return data, no_answers, ref_questions, ref_questions_idx
 
     def _internal_init(self, data: Union[str, dict]):
-        if type(data) is str:
-            self.file_path = data
-
         data, no_answers, ref_questions, ref_questions_idx = self._load(data)
 
         self.name = data['info']['name']
@@ -102,10 +109,20 @@ class QnAKnowledgeBase:
         self.author = data['info']['author'] if 'author' in data['info'].keys() else None
 
         if self.buffer:
-            self.data = data
+            self._buffer_data['data'] = data
             self._buffer_data['no_answers'] = no_answers
             self._buffer_data['ref_questions'] = ref_questions
             self._buffer_data['ref_questions_idx'] = ref_questions_idx
+
+    @property
+    def data(self) -> dict:
+        """Returns the entire knowledge base data.
+
+        """
+        if self.buffer:
+            return self._buffer_data['data']
+        else:
+            return self._load(data=self.file_path, only_data=True)
 
     @property
     def no_answers(self) -> List[str]:
@@ -119,7 +136,7 @@ class QnAKnowledgeBase:
 
     @property
     def ref_questions(self) -> List[str]:
-        """Returns the list of reference questions,
+        """Returns the list of reference questions.
 
         """
         if self.buffer:
@@ -129,7 +146,7 @@ class QnAKnowledgeBase:
 
     @property
     def ref_questions_idx(self) -> List[int]:
-        """Returns the list of reference questions' indices,
+        """Returns the list of reference questions' indices.
 
         """
         if self.buffer:

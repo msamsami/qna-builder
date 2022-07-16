@@ -1,4 +1,3 @@
-import json
 from typing import Tuple, Union, Optional, Any, List
 
 import numpy as np
@@ -18,11 +17,13 @@ from sklearn.metrics.pairwise import (
     haversine_distances
 )
 
+from .knowledge_base import QnAKnowledgeBase
 from ._utils import check_value_error
 from .const import (
     MODELS,
     DEFAULT_MODEL,
     DEFAULT_KNOWLEDGE_BASE,
+    DEFAULT_KNOWLEDGE_BASE_TYPE,
     METRICS,
     DEFAULT_METRIC,
     MIN_SCORE
@@ -41,19 +42,12 @@ class QnABot:
     model: Optional[Any]    # Model instance
     _is_fitted: bool    # Model fit status
 
-    knowledge_base: Optional[Union[str, dict]] = None   # Knowledge base file path or information
-    knowledge_base_name: Optional[str] = None   # Knowledge base name
-    knowledge_base_version: Optional[str] = None    # Knowledge base version
-    knowledge_base_author: Optional[str] = None     # Knowledge base author name
-
-    no_answers: List[str]   # List of "I don't understand" answers (this attribute is initialized if caching is enabled)
-    q: List[str]    # List of reference questions (this attribute is initialized if caching is enabled)
-    q_idx: List[int]    # List of reference questions' indices (this attribute is initialized if caching is enabled)
+    knowledge_base: Optional[QnAKnowledgeBase] = None   # Knowledge base object
 
     ref_embeddings: csr_matrix     # Reference embedding matrix returned after model fitting
 
     def __init__(self, model_name: str = DEFAULT_MODEL, similarity_metric: str = DEFAULT_METRIC,
-                 min_score: float = MIN_SCORE, cache: bool = False, **kwargs) -> None:
+                 min_score: float = MIN_SCORE, buffer: bool = False, **kwargs) -> None:
         """Initializes an instance of the class.
 
         Args:
@@ -62,8 +56,8 @@ class QnABot:
                                      Defaults to DEFAULT_METRIC.
             min_score (float): Minimum similarity score below which an "I don't understand" answer will be returned.
                                Defaults to MIN_SCORE.
-            cache (bool): Whether to cache (store) the knowledge base information in the memory instead of loading it
-                          from file each time it's required. Defaults to False.
+            buffer (bool): Whether to store the knowledge base information in the memory instead of loading it from
+                           file each time it's required. Defaults to False.
             **kwargs: Other keyword arguments supported to initialize models.
 
         Returns:
@@ -75,7 +69,7 @@ class QnABot:
         self.model_name: str = model_name
         self.similarity_metric: str = similarity_metric
         self.min_score: float = min_score
-        self.cache: bool = cache
+        self.buffer: bool = buffer
 
         self.model = self._initialize_model(model_name=model_name, **kwargs)
         self._is_fitted: bool = False
@@ -91,67 +85,21 @@ class QnABot:
         else:
             return None
 
-    @staticmethod
-    def load_knowledge_base(knowledge_base: Union[str, dict]) -> Tuple[dict, List[str], List[str], List[int]]:
-        """Loads a QnA knowledge from file or Python dictionary.
-
-        Args:
-            knowledge_base (Union[str, dict]): Knowledge base file path (str) or the variable containing the
-                                               knowledge base information (dict).
-
-        Returns:
-            Tuple[dict, List[str], List[str], List[int]]: tuple containing:
-                dict: Knowledge base information.
-                List[str]: List of "I don't understand" answers.
-                List[str]: List of reference questions.
-                List[int]: List of reference questions' indices.
-        """
-        if type(knowledge_base) is str:
-            with open(knowledge_base) as file:
-                data: dict = json.load(file)
-        else:
-            data: dict = knowledge_base
-
-        no_answer = data['no_answer']
-        q = [item['q'] for item in data['qna']]
-        q_idx = list()
-        for i, item in enumerate(q):
-            q_idx.extend([i for _ in range(len(item))])
-        q = [item for elem in q for item in elem]
-
-        return data, no_answer, q, q_idx
-
-    def init_knowledge_base(self, knowledge_base: Union[str, dict]) -> List[str]:
-        if self.cache and type(knowledge_base) is not str:
-            raise ValueError("A valid file path must be entered for 'knowledge_base' when caching is enabled")
-
-        data, no_answer, q, q_idx = self.load_knowledge_base(knowledge_base)
-
-        self.knowledge_base = knowledge_base if type(knowledge_base) is str else None
-        self.knowledge_base_name = data['info']['name']
-        self.knowledge_base_version = data['info']['version']
-        self.knowledge_base_author = data['info']['author']
-
-        if self.cache:
-            self.knowledge_base = data
-            self.no_answers = no_answer
-            self.q = q
-            self.q_idx = q_idx
-
-        return q
-
-    def fit(self, knowledge_base: Union[str, dict] = DEFAULT_KNOWLEDGE_BASE):
+    def fit(self, data: Union[str, dict, QnAKnowledgeBase] = DEFAULT_KNOWLEDGE_BASE,
+            type: str = DEFAULT_KNOWLEDGE_BASE_TYPE):
         """Fits QnA Bot to knowledge_base.
 
         Args:
-            knowledge_base (Union[str, dict]): Knowledge base file path (str) or the variable containing the
-                                               knowledge base information (dict). Defaults to DEFAULT_KNOWLEDGE_BASE.
+            data (Union[str, dict, QnAKnowledgeBase]): Knowledge base file path (str), buffer, i.e., the variable
+                                                       containing the knowledge base information (dict), or a
+                                                       QnAKnowledgeBase object. Defaults to DEFAULT_KNOWLEDGE_BASE.
+            type (str): Knowledge base type. Defaults to DEFAULT_KNOWLEDGE_BASE_TYPE.
 
         Returns:
             self: The instance itself.
         """
-        questions = self.init_knowledge_base(knowledge_base=knowledge_base)
-        self.ref_embeddings = self.model.fit_transform(questions)
+        self.knowledge_base = QnAKnowledgeBase(data, type, self.buffer) if not isinstance(data, QnAKnowledgeBase) else data
+        self.ref_embeddings = self.model.fit_transform(self.knowledge_base.ref_questions)
         self._is_fitted = True
         return self
 
@@ -169,10 +117,7 @@ class QnABot:
             raise NotFittedError('The model is not fitted. Use fit() method before calling answer()')
 
         # Retrieve questions' indices from knowledge base
-        if self.cache:
-            q_idx = self.q_idx
-        else:
-            _, _, _, q_idx = self.load_knowledge_base(knowledge_base=self.knowledge_base)
+        q_idx = self.knowledge_base.ref_questions_idx
 
         # Extract input statement embedding
         input_embeddings = self.model.transform([input])
@@ -208,11 +153,8 @@ class QnABot:
         highest_id, score = self.find_similarity(input)
 
         # Retrieve knowledge base information
-        if self.cache:
-            data: dict = self.knowledge_base
-            no_answers: List[str] = self.no_answers
-        else:
-            data, no_answers, _, _ = self.load_knowledge_base(knowledge_base=self.knowledge_base)
+        data: dict = self.knowledge_base.data
+        no_answers: List[str] = self.knowledge_base.no_answers
 
         # If score was lower than the minimum accepted value
         if score < self.min_score:
@@ -229,5 +171,5 @@ class QnABot:
             return answer_
 
     def __repr__(self):
-        return "<QnABot (model='%s', similarity_metric='%s', min_score=%.2f, cache=%s)>" % \
-               (self.model_name, self.similarity_metric, self.min_score, self.cache)
+        return "<QnABot (model='%s', similarity_metric='%s', min_score=%.2f, buffer=%s)>" % \
+               (self.model_name, self.similarity_metric, self.min_score, self.buffer)

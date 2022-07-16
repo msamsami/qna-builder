@@ -35,13 +35,14 @@ bot = QnABot()
 
 3. Fit the bot engine to the knowledge base
 ```python
-bot.fit(knowledge_base='knowledge_base.json')
+bot.fit(data='knowledge_base.json')
 ```
 
 4. Generate answers
 ```python
 bot.answer("Hey. What's up?")
 ```
+`"All good. What's up with you?"`
 
 # Algorithms
 
@@ -58,14 +59,15 @@ Supported similarity metrics are as follows:
 
 # Knowledge base editor
 
-By calling `knowledge_base_editor()`, the knowledge base editor window will open up in
+By calling `run_editor()` method of `QnAKnowledgeBase` class, the knowledge base editor window will open up in
 your web browser and allows you to edit your knowledge base by adding, removing, or
 modifying questions/answers.
 
 ```python
-from qnabot import knowledge_base_editor
+from qnabot import QnAKnowledgeBase
 
-knowledge_base_editor('my_knowledge_base.json')
+kb = QnAKnowledgeBase('my_knowledge_base.json')
+kb.run_editor()
 ```
 
 Here you can see a screenshot of the knowledge base editor:
