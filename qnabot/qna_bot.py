@@ -18,7 +18,7 @@ from sklearn.metrics.pairwise import (
     haversine_distances
 )
 
-from .utils import check_value_error
+from ._utils import check_value_error
 from .const import (
     MODELS,
     DEFAULT_MODEL,
@@ -140,7 +140,7 @@ class QnABot:
 
         return q
 
-    def fit(self, knowledge_base: Union[str, dict] = DEFAULT_KNOWLEDGE_BASE, ):
+    def fit(self, knowledge_base: Union[str, dict] = DEFAULT_KNOWLEDGE_BASE):
         """Fits QnA Bot to knowledge_base.
 
         Args:
