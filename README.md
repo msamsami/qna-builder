@@ -5,8 +5,8 @@
      alt="QnA Bot Image" />
 </div>
 
-**QnA Bot** is a similarity-based conversational dialog engine for Python which makes it easy
-to generate automated responses to input text according to a set of known conversations, i.e.,
+**QnA Bot** is a similarity-based conversational dialog engine for Python, which makes it easy
+to generate automated responses to input questions according to a set of known conversations, i.e.,
 question-answer pairs, stored in a ***knowledge base***. QnA Bot relies on a collection
 of question-answer pairs to generate (predict) answers for new inputs.
 
@@ -28,12 +28,12 @@ QnA Bot can be set up and used in four simple steps:
 from qnabot import QnABot
 ```
 
-2. Initialize a bot using a knowledge base
+2. Initialize a bot
 ```python
 bot = QnABot()
 ```
 
-3. Fit the bot engine to the knowledge base
+3. Fit the bot engine to a knowledge base
 ```python
 bot.fit(data='knowledge_base.json')
 ```
