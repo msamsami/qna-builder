@@ -64,7 +64,7 @@ class QnAKnowledgeBase:
         self._info["name"] = info.get('author')
 
     @staticmethod
-    def _ref_questions(self, qna: List[QnA]):
+    def _ref_questions(qna: List[QnA]):
         ref_questions_unpacked = [item['q'] for item in qna]
         ref_questions = [item for elem in ref_questions_unpacked for item in elem]
 
@@ -143,7 +143,7 @@ class QnAKnowledgeBase:
         editor(self.filepath_or_buffer)
 
     def __repr__(self):
-        return "<QnAKnowledgeBase (name='%s', author='%s', version=%s)>" % (self.name, self.author, self.version)
+        return "<QnAKnowledgeBase(name='%s', author='%s', version=%s)>" % (self.name, self.author, self.version)
 
 
 def check_kb_schema(data: dict):
