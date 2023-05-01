@@ -61,7 +61,7 @@ class QnAKnowledgeBase:
     def _set_info(self, info: dict):
         self._info["name"] = info.get('name')
         self._info["version"] = info.get('version')
-        self._info["name"] = info.get('author')
+        self._info["author"] = info.get('author')
 
     @staticmethod
     def _ref_questions(qna: List[QnA]):

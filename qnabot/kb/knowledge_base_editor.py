@@ -49,7 +49,7 @@ if st.button("Save", key="s-kb-ginfo"):
 
     try:
         # Save the knowledge base
-        with open('kb_default.json', 'w', encoding='utf-8') as file:
+        with open('default.json', 'w', encoding='utf-8') as file:
             json.dump(data, file, indent=4)
         with st.empty():
             st.success("Successfully updated general info of the knowledge base.")
@@ -76,7 +76,7 @@ with st.expander("'I don't know' answers", expanded=True):
 
         try:
             # Save the knowledge base
-            with open('kb_default.json', 'w', encoding='utf-8') as file:
+            with open('default.json', 'w', encoding='utf-8') as file:
                 json.dump(data, file, indent=4)
             with st.empty():
                 st.success("Successfully updated 'I don't know' answers of the knowledge base.")
@@ -111,5 +111,5 @@ with st.expander("Questions and answers"):
             data['qna'][i]['a'] = parse(answers[i])
 
             # Save the knowledge base
-            with open('kb_default.json', 'w', encoding='utf-8') as file:
+            with open('default.json', 'w', encoding='utf-8') as file:
                 json.dump(data, file, indent=4)
