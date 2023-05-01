@@ -10,4 +10,4 @@ __all__ = ['QnABot', 'QnAKnowledgeBase']
 
 
 from .qna_bot import QnABot
-from .knowledge_base import QnAKnowledgeBase
+from kb import QnAKnowledgeBase

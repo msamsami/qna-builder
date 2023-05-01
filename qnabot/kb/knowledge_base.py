@@ -2,10 +2,10 @@ import json
 import subprocess
 from typing import List
 
-from ._types import FilePath, QnA, QnAKBMapping, QnAKBMappingExtra
-from ._utils import check_type_error
+from .._utils import check_type_error
+from ._const import KNOWLEDGE_BASE_EDITOR_FILE_PATH
 from ._exceptions import KnowledgeBaseSchemaError
-from .const import KNOWLEDGE_BASE_EDITOR_FILE_PATH
+from ._types import FilePath, QnA, QnAKBMapping, QnAKBMappingExtra
 
 
 class QnAKnowledgeBase:
