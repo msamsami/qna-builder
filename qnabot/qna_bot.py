@@ -17,7 +17,7 @@ from sklearn.metrics.pairwise import (
     haversine_distances
 )
 
-from kb import QnAKnowledgeBase, FilePath, QnA
+from kb import QnAKnowledgeBase, FilePath, QnA, DEFAULT_KNOWLEDGE_BASE_FILE_PATH
 from ._enum import EmbeddingModel, SimilarityMetric
 
 
@@ -31,7 +31,7 @@ similarity = {
 
 class QnABot:
     _is_fitted: bool = False
-    _model_kwargs = dict = {}
+    _model_kwargs: dict = {}
 
     _params = {
         "kb": None,
@@ -70,17 +70,18 @@ class QnABot:
         else:
             return None
 
-    def fit(self, data: Union[FilePath, QnAKnowledgeBase]):
+    def fit(self, kb: Union[FilePath, QnAKnowledgeBase] = DEFAULT_KNOWLEDGE_BASE_FILE_PATH):
         """Fits QnA Bot to a given knowledge base.
 
         Args:
-            data (Union[FilePath, QnAKnowledgeBase]): Path to the knowledge base JSON file or buffer, or a
-                                                       QnAKnowledgeBase object.
+            kb (Union[FilePath, QnAKnowledgeBase]): Path to the knowledge base JSON file or buffer, or a
+                                                    QnAKnowledgeBase object. Defaults to the file path of the default
+                                                    QnA Bot knowledge base.
 
         Returns:
             self: The instance itself.
         """
-        self._params["kb"] = data if isinstance(data, QnAKnowledgeBase) else QnAKnowledgeBase(data, self.cache)
+        self._params["kb"] = kb if isinstance(kb, QnAKnowledgeBase) else QnAKnowledgeBase(kb, self.cache)
         self._params["model"] = self._initialize_model(model_name=self.model_name, **self._model_kwargs)
         self._params["ref_embeddings"] = self.model_.fit_transform(self.knowledge_base_.ref_questions)
 
