@@ -20,15 +20,14 @@ setup(
     classifiers=[
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Communications :: Chat',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'License :: OSI Approved :: MIT License',
     ],
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     install_requires=['scikit-learn==1.0.2'],
     extras_require={
-        'knoledge_base_editor': ['streamlit==1.8.0']
+        'kb_editor': ['streamlit==1.21.0']
     },
 )
