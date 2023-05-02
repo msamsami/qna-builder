@@ -6,7 +6,9 @@
     },
     "idk_answers": [
         "Sorry, I don't understand.",
-        "Could you please be more specific?"
+        "Could you please be more specific?",
+        "Oops, I have no idea!",
+        "I can't understand you. Come again?"
     ],
     "qna": [
         {
