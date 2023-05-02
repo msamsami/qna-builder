@@ -118,14 +118,14 @@ class QnABot:
             similarities = MinMaxScaler().fit_transform(similarities.reshape(-1, 1))
             similarities = 1.0 - similarities.flatten()
 
-        # Find the ID of the answer with the highest score
-        highest_id = int(np.argmax(similarities))
-        highest_id = q_idx[highest_id]
-
         # Find the score of the answer with the highest score
+        highest_id = int(np.argmax(similarities))
         score = float(similarities[highest_id])
 
-        return highest_id, score
+        # Find the ID of the answer with the highest score
+        highest_qna_id = q_idx[highest_id]
+
+        return highest_qna_id, score
 
     def answer(self, input: str, return_score: bool = False) -> Union[str, Tuple[str, float]]:
         """Returns the index and similarity score of a question in the knowledge base that is most similar to the input.
