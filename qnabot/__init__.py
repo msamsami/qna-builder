@@ -3,17 +3,18 @@ qna-bot is a similarity-based conversational dialog engine for Python that helps
 smart chatbots using a knowledge base of pre-defined questions and answers.
 """
 
-__version__ = "0.0.5"
+__version__ = "0.1.0"
 __author__ = "Mehdi Samsami"
 
 __all__ = [
     "QnABot",
-    "QnAKnowledgeBase",
     "EmbeddingModel",
-    "SimilarityMetric"
+    "SimilarityMetric",
+    "QnAKnowledgeBase",
+    "DEFAULT_KNOWLEDGE_BASE_FILE_PATH"
 ]
 
 
 from .qna_bot import QnABot
 from ._enum import EmbeddingModel, SimilarityMetric
-from .kb import QnAKnowledgeBase
+from .kb import QnAKnowledgeBase, DEFAULT_KNOWLEDGE_BASE_FILE_PATH
