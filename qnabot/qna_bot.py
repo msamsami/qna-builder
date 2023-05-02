@@ -1,4 +1,4 @@
-from typing import Any, Tuple, Union, List
+from typing import Any, Tuple, Union
 
 import numpy as np
 from scipy.sparse import csr_matrix
@@ -81,6 +81,7 @@ class QnABot:
         Returns:
             self: The instance itself.
         """
+        self._is_fitted = False
         self._params["kb"] = kb if isinstance(kb, QnAKnowledgeBase) else QnAKnowledgeBase(kb, self.cache)
         self._params["model"] = self._initialize_model(model_name=self.model_name, **self._model_kwargs)
         self._params["model"].fit(self.knowledge_base_.ref_questions)
@@ -89,11 +90,11 @@ class QnABot:
         self._is_fitted = True
         return self
 
-    def find_similarity(self, input: str = "") -> Tuple[int, float]:
+    def find_similarity(self, input: str) -> Tuple[int, float]:
         """Returns the index and similarity score of the question in the knowledge base most similar to the input.
 
         Args:
-            input (str): Input question. Defaults to ''.
+            input (str): Input question.
 
         Returns:
             int: Index of the most similar question.
@@ -121,7 +122,7 @@ class QnABot:
 
         # Find the score of the answer with the highest score
         score = float(similarities[highest_id])
-        print("score1", score)
+
         return highest_id, score
 
     def answer(self, input: str, return_score: bool = False) -> Union[str, Tuple[str, float]]:
