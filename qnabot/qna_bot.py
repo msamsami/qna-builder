@@ -39,13 +39,15 @@ class QnABot:
         "ref_embeddings": None
     }
 
-    def __init__(self, model_name: EmbeddingModel = "tfidf", similarity_metric: SimilarityMetric = "cosine",
+    def __init__(self, model_name: Union[str, EmbeddingModel] = "tfidf",
+                 similarity_metric: Union[str, SimilarityMetric] = "cosine",
                  min_score: float = 0.25, cache: bool = False, **kwargs) -> None:
         """Initializes an instance of the class.
 
         Args:
-            model_name (str): Name of the model used for text embedding. Defaults to 'tfidf'.
-            similarity_metric (str): Similarity metric used to find the most similar question. Defaults to 'cosine'.
+            model_name (Union[str, EmbeddingModel]): Name of the model used for text embedding. Defaults to 'tfidf'.
+            similarity_metric (Union[str, SimilarityMetric]): Similarity metric used to find the most similar question.
+                                                              Defaults to 'cosine'.
             min_score (float): Minimum similarity score below which an "I don't know" answer will be returned.
                                Defaults to 0.25.
             cache (bool): Whether to cache the entire knowledge base in memory. Defaults to False.

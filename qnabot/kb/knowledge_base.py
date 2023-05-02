@@ -25,14 +25,12 @@ class QnAKnowledgeBase:
     }
 
     def __init__(self, filepath_or_buffer: FilePath, cache: bool = False):
-        """Initializes an instance of the class for a given knowledge base.
+        """Initializes an instance of the class for a given knowledge base file.
 
         Args:
             filepath_or_buffer (FilePath): Path to the knowledge base JSON file.
             cache (bool): Whether to cache the entire knowledge base in memory. Defaults to False.
 
-        Returns:
-            self: The instance itself.
         """
         self.filepath_or_buffer = filepath_or_buffer
         self.cache = cache
@@ -138,7 +136,8 @@ class QnAKnowledgeBase:
     def run_editor(self):
         """Opens the knowledge base editor app in the web browser.
 
-        Applicable only when self.file_path is a valid knowledge base file path.
+        streamlit package must be installed.
+
         """
         editor(self.filepath_or_buffer)
 
@@ -170,12 +169,11 @@ def check_kb_schema(data: dict):
     check_type_error('qna', data['qna'], [{"q": [], "a": []}, ])
 
 
-def editor(file_path: str) -> None:
+def editor(file_path: FilePath) -> None:
     """Opens the knowledge base editor app in the web browser.
 
     Args:
-        file_path (str): Knowledge base file path.
-    """
-    check_type_error('file_path', file_path, 'str')
+        file_path (FilePath): Knowledge base file path.
 
+    """
     subprocess.run(f"streamlit run {KNOWLEDGE_BASE_EDITOR_FILE_PATH} {file_path}", shell=True, check=True)
