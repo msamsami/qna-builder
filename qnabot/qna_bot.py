@@ -17,7 +17,7 @@ from sklearn.metrics.pairwise import (
     haversine_distances
 )
 
-from kb import QnAKnowledgeBase, FilePath, QnA, DEFAULT_KNOWLEDGE_BASE_FILE_PATH
+from .kb import QnAKnowledgeBase, FilePath, QnA, DEFAULT_KNOWLEDGE_BASE_FILE_PATH
 from ._enum import EmbeddingModel, SimilarityMetric
 
 
@@ -83,7 +83,8 @@ class QnABot:
         """
         self._params["kb"] = kb if isinstance(kb, QnAKnowledgeBase) else QnAKnowledgeBase(kb, self.cache)
         self._params["model"] = self._initialize_model(model_name=self.model_name, **self._model_kwargs)
-        self._params["ref_embeddings"] = self.model_.fit_transform(self.knowledge_base_.ref_questions)
+        self._params["model"].fit(self.knowledge_base_.ref_questions)
+        self._params["ref_embeddings"] = self.model_.transform(self.knowledge_base_.ref_questions)
 
         self._is_fitted = True
         return self
@@ -109,6 +110,7 @@ class QnABot:
 
         # Calculate the similarities between the input embedding and the reference embeddings
         similarities = similarity[self.similarity_metric](input_embeddings, self.ref_embeddings_).flatten()
+
         if self.similarity_metric != 'cosine':
             similarities = MinMaxScaler().fit_transform(similarities.reshape(-1, 1))
             similarities = 1.0 - similarities.flatten()
@@ -119,14 +121,14 @@ class QnABot:
 
         # Find the score of the answer with the highest score
         score = float(similarities[highest_id])
-
+        print("score1", score)
         return highest_id, score
 
-    def answer(self, input: str = "", return_score: bool = False) -> Union[str, Tuple[str, float]]:
+    def answer(self, input: str, return_score: bool = False) -> Union[str, Tuple[str, float]]:
         """Returns the index and similarity score of a question in the knowledge base that is most similar to the input.
 
         Args:
-            input (str): Input question. Defaults to ''
+            input (str): Input question.
             return_score (bool): Whether to return the similarity score. Defaults to False.
 
         Returns:
@@ -137,18 +139,14 @@ class QnABot:
         """
         highest_id, score = self.find_similarity(input)
 
-        # Retrieve knowledge base information
-        data: List[QnA] = self.knowledge_base_.qna
-        idk_answers: List[str] = self.knowledge_base_.idk_answers
-
         # If score was lower than the minimum accepted value
         if score < self.min_score:
             # Return a random "I don't know" answer
-            answer_ = np.random.choice(idk_answers)
+            answer_ = np.random.choice(self.knowledge_base_.idk_answers)
 
         else:
             # Pick a random answer among the answers of the most similar question
-            answer_ = np.random.choice(data[highest_id]['a'])
+            answer_ = np.random.choice(self.knowledge_base_.qna[highest_id]['a'])
 
         if return_score:
             return answer_, score
@@ -178,4 +176,4 @@ class QnABot:
 
     def __repr__(self):
         return "<QnABot(model_name='%s', similarity_metric='%s', min_score=%.2f, cache=%s)>" % \
-               (self.model_name, self.similarity_metric, self.min_score, self.cache)
+               (str(self.model_name), str(self.similarity_metric), self.min_score, self.cache)
