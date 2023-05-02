@@ -17,7 +17,7 @@ from sklearn.metrics.pairwise import (
     haversine_distances
 )
 
-from .kb import QnAKnowledgeBase, FilePath, QnA, DEFAULT_KNOWLEDGE_BASE_FILE_PATH
+from .kb import QnAKnowledgeBase, FilePath, DEFAULT_KNOWLEDGE_BASE_FILE_PATH
 from ._enum import EmbeddingModel, SimilarityMetric
 
 
