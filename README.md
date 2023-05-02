@@ -27,6 +27,7 @@ dependencies and requirements.
 ## Getting started
 
 QnA Bot can be set up and used in four simple steps:
+
 1. Import `QnABot` class
 
 ```python
@@ -65,8 +66,7 @@ Supported similarity metrics are as follows:
 ## Knowledge base editor
 
 By calling `run_editor()` method of `QnAKnowledgeBase` class, the knowledge base editor window will open up in
-your web browser and allows you to edit your knowledge base by adding, removing, or
-modifying questions/answers.
+your web browser and allows you to edit your knowledge base by adding, removing, or modifying questions/answers.
 
 ```python
 from qnabot import QnAKnowledgeBase
@@ -75,10 +75,10 @@ kb = QnAKnowledgeBase('my_knowledge_base.json')
 kb.run_editor()
 ```
 
-Here you can see a screenshot of the knowledge base editor:
+Here, you can see a screenshot of the knowledge base editor:
 
 <div style="text-align:center">
-<img src="docs/kb_editor.png" alt="QnA Bot Knowledge Base Editor" width="400"/>
+<img src="docs/kb_editor.png" alt="QnA Bot Knowledge Base Editor" width="450"/>
 </div>
 
 Note that you need to install the optional requirement [streamlit](https://streamlit.io/)
