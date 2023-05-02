@@ -40,7 +40,7 @@ bot = QnABot()
 
 3. Fit the bot engine to a knowledge base
 ```python
-bot.fit(data='knowledge_base.json')
+bot.fit(kb="knowledge_base.json")
 ```
 
 4. Generate answers
@@ -78,7 +78,7 @@ kb.run_editor()
 Here you can see a screenshot of the knowledge base editor:
 
 <div style="text-align:center">
-<img src="knowledge_base.png" alt="QnA Bot Knowledge Base Editor" />
+<img src="docs/kb_editor.png" alt="QnA Bot Knowledge Base Editor" width="400"/>
 </div>
 
 Note that you need to install the optional requirement [streamlit](https://streamlit.io/)
