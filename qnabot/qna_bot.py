@@ -1,4 +1,4 @@
-from typing import Tuple, Union, Optional, Any, List
+from typing import Any, Tuple, Union
 
 import numpy as np
 from scipy.sparse import csr_matrix
@@ -17,17 +17,8 @@ from sklearn.metrics.pairwise import (
     haversine_distances
 )
 
-from .knowledge_base import QnAKnowledgeBase
-from ._utils import check_value_error
-from .const import (
-    MODELS,
-    DEFAULT_MODEL,
-    DEFAULT_KNOWLEDGE_BASE,
-    DEFAULT_KNOWLEDGE_BASE_TYPE,
-    METRICS,
-    DEFAULT_METRIC,
-    MIN_SCORE
-)
+from .kb import QnAKnowledgeBase, FilePath, DEFAULT_KNOWLEDGE_BASE_FILE_PATH
+from ._enum import EmbeddingModel, SimilarityMetric
 
 
 similarity = {
@@ -39,40 +30,36 @@ similarity = {
 
 
 class QnABot:
-    model: Optional[Any]    # Model instance
-    _is_fitted: bool    # Model fit status
+    _is_fitted: bool = False
+    _model_kwargs: dict = {}
 
-    knowledge_base: Optional[QnAKnowledgeBase] = None   # Knowledge base object
+    _params = {
+        "kb": None,
+        "model": None,
+        "ref_embeddings": None
+    }
 
-    ref_embeddings: csr_matrix     # Reference embedding matrix returned after model fitting
-
-    def __init__(self, model_name: str = DEFAULT_MODEL, similarity_metric: str = DEFAULT_METRIC,
-                 min_score: float = MIN_SCORE, buffer: bool = False, **kwargs) -> None:
+    def __init__(self, model_name: Union[str, EmbeddingModel] = "tfidf",
+                 similarity_metric: Union[str, SimilarityMetric] = "cosine",
+                 min_score: float = 0.25, cache: bool = False, **kwargs) -> None:
         """Initializes an instance of the class.
 
         Args:
-            model_name (str): Name of the model used for text embedding. Defaults to DEFAULT_MODEL.
-            similarity_metric (str): Similarity metric used to find the most similar question.
-                                     Defaults to DEFAULT_METRIC.
-            min_score (float): Minimum similarity score below which an "I don't understand" answer will be returned.
-                               Defaults to MIN_SCORE.
-            buffer (bool): Whether to store the knowledge base information in the memory instead of loading it from
-                           file each time it's required. Defaults to False.
+            model_name (Union[str, EmbeddingModel]): Name of the model used for text embedding. Defaults to 'tfidf'.
+            similarity_metric (Union[str, SimilarityMetric]): Similarity metric used to find the most similar question.
+                                                              Defaults to 'cosine'.
+            min_score (float): Minimum similarity score below which an "I don't know" answer will be returned.
+                               Defaults to 0.25.
+            cache (bool): Whether to cache the entire knowledge base in memory. Defaults to False.
             **kwargs: Other keyword arguments supported to initialize models.
 
-        Returns:
-            self: The instance itself.
         """
-        check_value_error('model_name', model_name, MODELS)
-        check_value_error('similarity_metric', similarity_metric, METRICS)
-
         self.model_name: str = model_name
         self.similarity_metric: str = similarity_metric
         self.min_score: float = min_score
-        self.buffer: bool = buffer
+        self.cache: bool = cache
 
-        self.model = self._initialize_model(model_name=model_name, **kwargs)
-        self._is_fitted: bool = False
+        self._model_kwargs = kwargs
 
     @staticmethod
     def _initialize_model(model_name: str, **kwargs):
@@ -85,29 +72,31 @@ class QnABot:
         else:
             return None
 
-    def fit(self, data: Union[str, dict, QnAKnowledgeBase] = DEFAULT_KNOWLEDGE_BASE,
-            type: str = DEFAULT_KNOWLEDGE_BASE_TYPE):
-        """Fits QnA Bot to knowledge_base.
+    def fit(self, kb: Union[FilePath, QnAKnowledgeBase] = DEFAULT_KNOWLEDGE_BASE_FILE_PATH):
+        """Fits QnA Bot to a given knowledge base.
 
         Args:
-            data (Union[str, dict, QnAKnowledgeBase]): Knowledge base file path (str), buffer, i.e., the variable
-                                                       containing the knowledge base information (dict), or a
-                                                       QnAKnowledgeBase object. Defaults to DEFAULT_KNOWLEDGE_BASE.
-            type (str): Knowledge base type. Defaults to DEFAULT_KNOWLEDGE_BASE_TYPE.
+            kb (Union[FilePath, QnAKnowledgeBase]): Path to the knowledge base JSON file or buffer, or a
+                                                    QnAKnowledgeBase object. Defaults to the file path of the default
+                                                    QnA Bot knowledge base.
 
         Returns:
             self: The instance itself.
         """
-        self.knowledge_base = QnAKnowledgeBase(data, type, self.buffer) if not isinstance(data, QnAKnowledgeBase) else data
-        self.ref_embeddings = self.model.fit_transform(self.knowledge_base.ref_questions)
+        self._is_fitted = False
+        self._params["kb"] = kb if isinstance(kb, QnAKnowledgeBase) else QnAKnowledgeBase(kb, self.cache)
+        self._params["model"] = self._initialize_model(model_name=self.model_name, **self._model_kwargs)
+        self._params["model"].fit(self.knowledge_base_.ref_questions)
+        self._params["ref_embeddings"] = self.model_.transform(self.knowledge_base_.ref_questions)
+
         self._is_fitted = True
         return self
 
-    def find_similarity(self, input: str = '') -> Tuple[int, float]:
+    def find_similarity(self, input: str) -> Tuple[int, float]:
         """Returns the index and similarity score of the question in the knowledge base most similar to the input.
 
         Args:
-            input (str): Input question. Defaults to ''.
+            input (str): Input question.
 
         Returns:
             int: Index of the most similar question.
@@ -117,31 +106,32 @@ class QnABot:
             raise NotFittedError('The model is not fitted. Use fit() method before calling answer()')
 
         # Retrieve questions' indices from knowledge base
-        q_idx = self.knowledge_base.ref_questions_idx
+        q_idx = self.knowledge_base_.ref_questions_idx
 
         # Extract input statement embedding
-        input_embeddings = self.model.transform([input])
+        input_embeddings = self.model_.transform([input])
 
         # Calculate the similarities between the input embedding and the reference embeddings
-        similarities = similarity[self.similarity_metric](input_embeddings, self.ref_embeddings).flatten()
+        similarities = similarity[self.similarity_metric](input_embeddings, self.ref_embeddings_).flatten()
+
         if self.similarity_metric != 'cosine':
             similarities = MinMaxScaler().fit_transform(similarities.reshape(-1, 1))
             similarities = 1.0 - similarities.flatten()
 
-        # Find the ID of the answer with the highest score
-        highest_id = int(np.argmax(similarities))
-        highest_id = q_idx[highest_id]
-
         # Find the score of the answer with the highest score
+        highest_id = int(np.argmax(similarities))
         score = float(similarities[highest_id])
 
-        return highest_id, score
+        # Find the ID of the answer with the highest score
+        highest_qna_id = q_idx[highest_id]
 
-    def answer(self, input: str = '', return_score: bool = False) -> Union[str, Tuple[str, float]]:
+        return highest_qna_id, score
+
+    def answer(self, input: str, return_score: bool = False) -> Union[str, Tuple[str, float]]:
         """Returns the index and similarity score of a question in the knowledge base that is most similar to the input.
 
         Args:
-            input (str): Input question. Defaults to ''
+            input (str): Input question.
             return_score (bool): Whether to return the similarity score. Defaults to False.
 
         Returns:
@@ -152,24 +142,41 @@ class QnABot:
         """
         highest_id, score = self.find_similarity(input)
 
-        # Retrieve knowledge base information
-        data: dict = self.knowledge_base.data
-        no_answers: List[str] = self.knowledge_base.no_answers
-
         # If score was lower than the minimum accepted value
         if score < self.min_score:
-            # Return a random "I don't understand" answer
-            answer_ = np.random.choice(no_answers)
+            # Return a random "I don't know" answer
+            answer_ = np.random.choice(self.knowledge_base_.idk_answers)
 
         else:
             # Pick a random answer among the answers of the most similar question
-            answer_ = np.random.choice(data['qna'][highest_id]['a'])
+            answer_ = np.random.choice(self.knowledge_base_.qna[highest_id]['a'])
 
         if return_score:
             return answer_, score
         else:
             return answer_
 
+    @property
+    def knowledge_base_(self) -> QnAKnowledgeBase:
+        """Returns the knowledge base on which the QnA Bot is fitted.
+
+        """
+        return self._params["kb"]
+
+    @property
+    def model_(self) -> Any:
+        """Returns the embedding model fitted on the knowledge base.
+
+        """
+        return self._params["model"]
+
+    @property
+    def ref_embeddings_(self) -> csr_matrix:
+        """Returns the embedding matrix extracted from reference questions in the knowledge base.
+
+        """
+        return self._params["ref_embeddings"]
+
     def __repr__(self):
-        return "<QnABot (model='%s', similarity_metric='%s', min_score=%.2f, buffer=%s)>" % \
-               (self.model_name, self.similarity_metric, self.min_score, self.buffer)
+        return "<QnABot(model_name='%s', similarity_metric='%s', min_score=%.2f, cache=%s)>" % \
+               (str(self.model_name), str(self.similarity_metric), self.min_score, self.cache)
