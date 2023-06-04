@@ -20,7 +20,7 @@ of question-answer pairs to generate (predict) answers for new inputs.
 
 The easiest way to install the qna-bot is by using `pip`:
 ```shell
-pip install qna-bot
+pip install git+https://github.com/msamsami/qna-bot
 ```
 This library is shipped as an all-in-one module implementation with minimalistic
 dependencies and requirements.
