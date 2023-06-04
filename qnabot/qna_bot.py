@@ -39,9 +39,12 @@ class QnABot:
         "ref_embeddings": None
     }
 
-    def __init__(self, model_name: Union[str, EmbeddingModel] = "tfidf",
+    def __init__(self,
+                 model_name: Union[str, EmbeddingModel] = "tfidf",
                  similarity_metric: Union[str, SimilarityMetric] = "cosine",
-                 min_score: float = 0.25, cache: bool = False, **kwargs) -> None:
+                 min_score: float = 0.25,
+                 cache: bool = False,
+                 **kwargs) -> None:
         """Initializes an instance of the class.
 
         Args:
