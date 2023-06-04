@@ -5,20 +5,21 @@ from setuptools import setup
 
 setup(
     name='qna-bot',
-    version='0.1.0',
+    version='0.1.1',
     description='Similarity-based conversational dialog engine for Python.',
     keywords=['python', 'qna', 'qnabot', 'chat', 'chatbot', 'conversation', 'dialog', 'nlp'],
     author='Mehdi Samsami',
     author_email='mehdisamsami@live.com',
     url='https://github.com/msamsami/qna-bot',
     project_urls={
-            'Documentation': 'https://qna-bot.readthedocs.io',
-        },
+        'Documentation': 'https://qna-bot.readthedocs.io',
+    },
     long_description=codecs.open(path.join(path.abspath(path.dirname(__file__)), 'README.md'), encoding='utf-8').read(),
     long_description_content_type='text/markdown',
     packages=['qnabot'],
     classifiers=[
         'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: Text Processing :: Linguistic',
         'Topic :: Communications :: Chat',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',

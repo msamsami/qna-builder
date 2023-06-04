@@ -1,6 +1,6 @@
 # QnA Bot
 
-![](https://img.shields.io/badge/version-v0.1.0-green)
+![](https://img.shields.io/badge/version-v0.1.1-green)
 ![](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9-blue)
 
 <p>
@@ -19,7 +19,7 @@ of question-answer pairs to generate (predict) answers for new inputs.
 
 The easiest way to install the qna-bot is by using `pip`:
 ```shell
-pip install git+https://github.com/msamsami/qna-bot
+pip install qna-bot
 ```
 This library is shipped as an all-in-one module implementation with minimalistic
 dependencies and requirements.
