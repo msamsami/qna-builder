@@ -1,6 +1,6 @@
 # QnA Builder
 
-![](https://img.shields.io/badge/version-v0.1.1-green)
+![](https://img.shields.io/badge/version-v0.1.2-green)
 ![](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9-blue)
 ![](https://github.com/msamsami/qna-bot/actions/workflows/python-publish.yml/badge.svg)
 [![](https://img.shields.io/pypi/v/qna-builder)](https://pypi.org/project/qna-builder/)

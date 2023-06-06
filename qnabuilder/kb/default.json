@@ -1,14 +1,16 @@
 {
     "info": {
         "name": "Chit-chat Dataset",
-        "version": "0.0.2",
+        "version": "0.0.3",
         "author": "Microsoft"
     },
     "idk_answers": [
         "Sorry, I don't understand.",
         "Could you please be more specific?",
-        "Oops, I have no idea!",
-        "I can't understand you. Come again?"
+        "I have no idea!",
+        "Oops, you lost me...",
+        "I can't understand you. Come again?",
+        "Could you rephrase that in a way that I can understand?"
     ],
     "qna": [
         {
@@ -7602,7 +7604,7 @@
                 "What would you like me to refer to you?"
             ],
             "a": [
-                "Oh, I don't have a name."
+                "I am QnA Builder!"
             ]
         },
         {
