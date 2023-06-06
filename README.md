@@ -3,6 +3,7 @@
 ![](https://img.shields.io/badge/version-v0.1.1-green)
 ![](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9-blue)
 ![](https://github.com/msamsami/qna-bot/actions/workflows/python-publish.yml/badge.svg)
+[![](https://img.shields.io/pypi/v/qna-builder)](https://pypi.org/project/qna-builder/)
 
 <p>
 <img src="logo.jpg" alt="QnA Bot logo" width="200"/>
@@ -11,8 +12,8 @@
 
 ## Introduction
 
-**QnA Builder** is a simple, no code way to build chatbots. It provides a similarity-based conversational dialog engine,
-**QnA Bot**, for Python, which makes it easy to generate automated responses to input questions according to a set of known
+**QnA Builder** is a simple, no code way to build chatbots in Python. It provides a similarity-based conversational dialog
+engine, **QnA Bot**, which makes it easy to generate automated responses to input questions according to a set of known
 conversations, i.e., question-answer pairs, stored in a ***knowledge base***. QnA Bot relies on a collection of
 question-answer pairs to generate (predict) answers for new inputs.
 
