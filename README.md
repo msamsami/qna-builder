@@ -1,4 +1,4 @@
-# QnA Bot
+# QnA Builder
 
 ![](https://img.shields.io/badge/version-v0.1.1-green)
 ![](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9-blue)
@@ -6,7 +6,7 @@
 [![](https://img.shields.io/pypi/v/qna-builder)](https://pypi.org/project/qna-builder/)
 
 <p>
-<img src="logo.jpg" alt="QnA Bot logo" width="200"/>
+<img src="https://raw.githubusercontent.com/msamsami/qna-builder/main/logo.jpg" alt="QnA Builder logo" width="200"/>
 <br>
 </p>
 
