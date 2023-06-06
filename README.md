@@ -70,7 +70,7 @@ By calling `run_editor()` method of `QnAKnowledgeBase` class, the knowledge base
 your web browser and allows you to edit your knowledge base by adding, removing, or modifying questions/answers.
 
 ```python
-from qnabot import QnAKnowledgeBase
+from qnabuilder import QnAKnowledgeBase
 
 kb = QnAKnowledgeBase('my_knowledge_base.json')
 kb.run_editor()
