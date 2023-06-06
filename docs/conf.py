@@ -17,8 +17,8 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'qna-bot'
-copyright = '2022, Mehdi Samsami'
+project = 'qna-builder'
+copyright = '2023, Mehdi Samsami'
 author = 'Mehdi Samsami'
 
 

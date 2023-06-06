@@ -11,28 +11,27 @@
 
 ## Introduction
 
-**QnA Bot** is a similarity-based conversational dialog engine for Python, which makes it easy
-to generate automated responses to input questions according to a set of known conversations, i.e.,
-question-answer pairs, stored in a ***knowledge base***. QnA Bot relies on a collection
-of question-answer pairs to generate (predict) answers for new inputs.
+**QnA Builder** is a simple, no code way to build chatbots. It provides a similarity-based conversational dialog engine,
+**QnA Bot**, for Python, which makes it easy to generate automated responses to input questions according to a set of known
+conversations, i.e., question-answer pairs, stored in a ***knowledge base***. QnA Bot relies on a collection of
+question-answer pairs to generate (predict) answers for new inputs.
 
 ## Install
 
-The easiest way to install the qna-bot is by using `pip`:
+The easiest way to install the qna-builder is by using `pip`:
 ```shell
-pip install git+https://github.com/msamsami/qna-bot
+pip install qna-builder
 ```
-This library is shipped as an all-in-one module implementation with minimalistic
-dependencies and requirements.
+This library is shipped as an all-in-one module implementation with minimalistic dependencies and requirements.
 
 ## Getting started
 
-QnA Bot can be set up and used in four simple steps:
+A QnA Bot can be set up and used in four simple steps:
 
 1. Import `QnABot` class
 
 ```python
-from qnabot import QnABot
+from qnabuilder import QnABot
 ```
 
 2. Initialize a bot
@@ -82,5 +81,5 @@ Here, you can see a screenshot of the knowledge base editor:
 <img src="docs/kb_editor.png" alt="QnA Bot Knowledge Base Editor" width="450"/>
 </div>
 
-Note that you need to install the optional requirement [streamlit](https://streamlit.io/)
-to be able to use the knowledge base editor.
+Note that you need to install the optional requirement [streamlit](https://streamlit.io/) to be able to use the
+knowledge base editor.
