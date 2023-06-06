@@ -7,7 +7,7 @@ setup(
     name='qna-builder',
     version='0.1.1',
     description='Similarity-based conversational dialog engine for Python.',
-    keywords=['python', 'qna', 'qnabot', 'chat', 'chatbot', 'conversation', 'dialog', 'nlp'],
+    keywords=['python', 'qna', 'qnabuilder', 'chat', 'chatbot', 'conversation', 'dialog'],
     author='Mehdi Samsami',
     author_email='mehdisamsami@live.com',
     url='https://github.com/msamsami/qna-builder',
