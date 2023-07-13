@@ -98,6 +98,7 @@ class QnABot:
         self._is_fitted = True
         return self
 
+    @property
     def _similarity_function(self):
         functions = {
             "cosine": cosine_similarity,
