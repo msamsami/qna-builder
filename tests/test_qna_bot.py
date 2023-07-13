@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from qnabuilder import QnABot, QnAKnowledgeBase
+from qnabuilder import QnABot, EmbeddingModel, SimilarityMetric
 
 
 class TestQnABot(TestCase):
@@ -16,3 +16,9 @@ class TestQnABot(TestCase):
             bot.fit()
             bot.answer("hi")
         self.assertIn("mahalanobis is not a valid similarity_metric", str(ctx.exception))
+
+    def test_generic_answer_tfidf(self):
+        for metric in SimilarityMetric:
+            bot = QnABot(model_name=EmbeddingModel.TFIDF, similarity_metric=metric)
+            bot.fit()
+            self.assertEqual(bot.answer("Who are you?"), "I am QnA Builder!")
