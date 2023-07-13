@@ -1,8 +1,9 @@
-import streamlit as st
-import time
 import json
 import sys
+import time
 from typing import Union
+
+import streamlit as st
 
 
 def parse(input: Union[list, str]) -> Union[str, list]:
@@ -95,8 +96,8 @@ with st.expander("'I don't know' answers", expanded=True):
                 st.write("")
 
 
-questions = [None for i in range(len(data["qna"]))]
-answers = [None for i in range(len(data["qna"]))]
+questions = [None] * len(data["qna"])
+answers = [None] * len(data["qna"])
 st.write("\n")
 
 with st.expander("Questions and answers"):
