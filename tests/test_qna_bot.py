@@ -22,3 +22,15 @@ class TestQnABot(TestCase):
             bot = QnABot(model_name=EmbeddingModel.TFIDF, similarity_metric=metric)
             bot.fit()
             self.assertEqual(bot.answer("Who are you?"), "I am QnA Builder!")
+
+    def test_generic_answer_murmurhash(self):
+        for metric in SimilarityMetric:
+            bot = QnABot(model_name=EmbeddingModel.MURMURHASH, similarity_metric=metric)
+            bot.fit()
+            self.assertEqual(bot.answer("Do you have a name?"), "I am QnA Builder!")
+    
+    def test_generic_answer_count(self):
+        for metric in SimilarityMetric:
+            bot = QnABot(model_name=EmbeddingModel.COUNT, similarity_metric=metric)
+            bot.fit()
+            self.assertEqual(bot.answer("So what's your name?"), "I am QnA Builder!")
