@@ -22,4 +22,3 @@ class SimilarityMetric(str, Enum):
     COSINE = "cosine"
     EUCLIDEAN = "euclidean"
     MANHATTAN = "manhattan"
-    HAVERSINE = "haversine"

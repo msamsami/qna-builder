@@ -104,7 +104,6 @@ class QnABot:
             "cosine": cosine_similarity,
             "euclidean": euclidean_distances,
             "manhattan": manhattan_distances,
-            "haversine": haversine_distances,
         }
 
         if self.similarity_metric not in functions:

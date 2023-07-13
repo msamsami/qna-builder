@@ -63,7 +63,6 @@ Supported similarity metrics are as follows:
 - Cosine similarity (`'cosine'`)
 - Euclidean distance (`'euclidean'`)
 - Manhattan distance (`'manhattan'`)
-- Haversine distance (`'haversine'`)
 
 ## Knowledge base editor
 
