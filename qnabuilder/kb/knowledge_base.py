@@ -2,26 +2,21 @@ import json
 import subprocess
 from typing import List
 
-from .._utils import check_type_error
+from .validators import check_kb_schema
 from ._const import KNOWLEDGE_BASE_EDITOR_FILE_PATH
-from ._exceptions import KnowledgeBaseSchemaError
-from ._types import FilePath, QnA, QnAKBMapping, QnAKBMappingExtra
+from ._types import FilePath, QnA, QnAKbMapping, QnAKbMappingExtra
 
 
 class QnAKnowledgeBase:
     _is_loaded: bool = False
 
-    _info = {
-        "name": None,
-        "version": None,
-        "author": None
-    }
+    _info = {"name": None, "version": None, "author": None}
 
-    _cache_data: QnAKBMappingExtra = {
+    _cache_data: QnAKbMappingExtra = {
         "qna": None,
         "idk_answers": None,
         "ref_questions": None,
-        "ref_questions_idx": None
+        "ref_questions_idx": None,
     }
 
     def __init__(self, filepath_or_buffer: FilePath, cache: bool = False):
@@ -35,7 +30,7 @@ class QnAKnowledgeBase:
         self.filepath_or_buffer = filepath_or_buffer
         self.cache = cache
 
-    def _load(self, filepath_or_buffer: FilePath) -> QnAKBMapping:
+    def _load(self, filepath_or_buffer: FilePath) -> QnAKbMapping:
         with open(filepath_or_buffer, "r") as file:
             kb: dict = json.load(file)
 
@@ -45,11 +40,11 @@ class QnAKnowledgeBase:
 
         if self.cache:
             ref_questions, ref_questions_idx = self._ref_questions(kb["qna"])
-            _cache_data: QnAKBMappingExtra = {
+            self._cache_data: QnAKbMappingExtra = {
                 "qna": kb["qna"],
                 "idk_answers": kb["idk_answers"],
                 "ref_questions": ref_questions,
-                "ref_questions_idx": ref_questions_idx
+                "ref_questions_idx": ref_questions_idx,
             }
 
         self._is_loaded = True
@@ -57,13 +52,13 @@ class QnAKnowledgeBase:
         return dict(qna=kb["qna"], idk_answers=kb["idk_answers"])
 
     def _set_info(self, info: dict):
-        self._info["name"] = info.get('name')
-        self._info["version"] = info.get('version')
-        self._info["author"] = info.get('author')
+        self._info["name"] = info.get("name")
+        self._info["version"] = info.get("version")
+        self._info["author"] = info.get("author")
 
     @staticmethod
     def _ref_questions(qna: List[QnA]):
-        ref_questions_unpacked = [item['q'] for item in qna]
+        ref_questions_unpacked = [item["q"] for item in qna]
         ref_questions = [item for elem in ref_questions_unpacked for item in elem]
 
         ref_questions_idx = list()
@@ -99,7 +94,7 @@ class QnAKnowledgeBase:
 
         """
         if self.cache and self._is_loaded:
-            return self._cache_data['qna']
+            return self._cache_data["qna"]
         else:
             return self._load(filepath_or_buffer=self.filepath_or_buffer)["qna"]
 
@@ -109,7 +104,7 @@ class QnAKnowledgeBase:
 
         """
         if self.cache and self._is_loaded:
-            return self._cache_data['idk_answers']
+            return self._cache_data["idk_answers"]
         else:
             return self._load(filepath_or_buffer=self.filepath_or_buffer)["idk_answers"]
 
@@ -119,9 +114,11 @@ class QnAKnowledgeBase:
 
         """
         if self.cache and self._is_loaded:
-            return self._cache_data['ref_questions']
+            return self._cache_data["ref_questions"]
         else:
-            return self._ref_questions(self._load(filepath_or_buffer=self.filepath_or_buffer)["qna"])[0]
+            return self._ref_questions(
+                self._load(filepath_or_buffer=self.filepath_or_buffer)["qna"]
+            )[0]
 
     @property
     def ref_questions_idx(self) -> List[int]:
@@ -129,9 +126,11 @@ class QnAKnowledgeBase:
 
         """
         if self.cache and self._is_loaded:
-            return self._cache_data['ref_questions_idx']
+            return self._cache_data["ref_questions_idx"]
         else:
-            return self._ref_questions(self._load(filepath_or_buffer=self.filepath_or_buffer)["qna"])[1]
+            return self._ref_questions(
+                self._load(filepath_or_buffer=self.filepath_or_buffer)["qna"]
+            )[1]
 
     def run_editor(self):
         """Opens the knowledge base editor app in the web browser.
@@ -142,31 +141,11 @@ class QnAKnowledgeBase:
         editor(self.filepath_or_buffer)
 
     def __repr__(self):
-        return "<QnAKnowledgeBase(name='%s', author='%s', version=%s)>" % (self.name, self.author, self.version)
-
-
-def check_kb_schema(data: dict):
-    """Checks the schema of a knowledge base and raises error if it doesn't match the correct schema of QnABot
-    knowledge base.
-
-    Args:
-        data (dict): A dictionary containing knowledge base data.
-
-    """
-    main_keys = data.keys()
-
-    for key in ['info', 'idk_answers', 'qna']:
-        if key not in main_keys:
-            raise KnowledgeBaseSchemaError(f"Knowledge base must have an '{key}' field")
-
-    if 'name' not in data['info'].keys():
-        raise KnowledgeBaseSchemaError(f"'name' is not provided in 'info'")
-
-    for key in data['info'].keys():
-        check_type_error(key, data['info'][key], 'str')
-
-    check_type_error('idk_answers', data['idk_answers'], ['str', ])
-    check_type_error('qna', data['qna'], [{"q": [], "a": []}, ])
+        return "<QnAKnowledgeBase(name='%s', author='%s', version=%s)>" % (
+            self.name,
+            self.author,
+            self.version,
+        )
 
 
 def editor(file_path: FilePath) -> None:
@@ -176,4 +155,8 @@ def editor(file_path: FilePath) -> None:
         file_path (FilePath): Knowledge base file path.
 
     """
-    subprocess.run(f"streamlit run {KNOWLEDGE_BASE_EDITOR_FILE_PATH} {file_path}", shell=True, check=True)
+    subprocess.run(
+        f"streamlit run {KNOWLEDGE_BASE_EDITOR_FILE_PATH} {file_path}",
+        shell=True,
+        check=True,
+    )

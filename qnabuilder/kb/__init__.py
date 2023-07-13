@@ -1,9 +1,4 @@
-__all__ = [
-    "QnAKnowledgeBase",
-    "FilePath",
-    "QnA",
-    "DEFAULT_KNOWLEDGE_BASE_FILE_PATH"
-]
+__all__ = ["QnAKnowledgeBase", "FilePath", "QnA", "DEFAULT_KNOWLEDGE_BASE_FILE_PATH"]
 
 from ._const import DEFAULT_KNOWLEDGE_BASE_FILE_PATH
 from ._types import FilePath, QnA

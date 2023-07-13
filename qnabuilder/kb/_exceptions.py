@@ -3,4 +3,5 @@ class KnowledgeBaseSchemaError(KeyError):
 
     This class inherits from KeyError to help with exception handling and backward compatibility.
     """
+
     pass
