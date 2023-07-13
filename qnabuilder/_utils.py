@@ -5,20 +5,22 @@ def parse_list_options(options: list) -> str:
     """Returns the parsed version of a list of options in string.
 
     Args:
-        options (list): a list of options, parameters, or items to be parsed.
+        options (list): A list of options, parameters, or items to be parsed.
 
     Returns:
-        str: comma-separated sequence of options with an 'or' after the last comma.
+        str: Comma-separated sequence of options with an 'or' after the last comma.
     """
-    check_type_error('options', options, list())
+    check_type_error("options", options, list())
 
-    options_str = ', '.join([str(option) for option in options])
-    last_comma_idx = options_str.rfind(',')
+    options_str = ", ".join([str(option) for option in options])
+    last_comma_idx = options_str.rfind(",")
 
     if len(options) == 2:
-        return options_str[:last_comma_idx] + ' or' + options_str[last_comma_idx + 1:]
+        return options_str[:last_comma_idx] + " or" + options_str[last_comma_idx + 1 :]
     else:
-        return options_str[:last_comma_idx + 2] + 'or' + options_str[last_comma_idx + 1:]
+        return (
+            options_str[: last_comma_idx + 2] + "or" + options_str[last_comma_idx + 1 :]
+        )
 
 
 def value_error_message(name: str, value: Any, options: list) -> str:
