@@ -10,17 +10,13 @@ from ._types import FilePath, QnA, QnAKbMapping, QnAKbMappingExtra
 class QnAKnowledgeBase:
     _is_loaded: bool = False
 
-    _info = {
-        "name": None,
-        "version": None,
-        "author": None
-    }
+    _info = {"name": None, "version": None, "author": None}
 
     _cache_data: QnAKbMappingExtra = {
         "qna": None,
         "idk_answers": None,
         "ref_questions": None,
-        "ref_questions_idx": None
+        "ref_questions_idx": None,
     }
 
     def __init__(self, filepath_or_buffer: FilePath, cache: bool = False):
@@ -48,7 +44,7 @@ class QnAKnowledgeBase:
                 "qna": kb["qna"],
                 "idk_answers": kb["idk_answers"],
                 "ref_questions": ref_questions,
-                "ref_questions_idx": ref_questions_idx
+                "ref_questions_idx": ref_questions_idx,
             }
 
         self._is_loaded = True
@@ -56,13 +52,13 @@ class QnAKnowledgeBase:
         return dict(qna=kb["qna"], idk_answers=kb["idk_answers"])
 
     def _set_info(self, info: dict):
-        self._info["name"] = info.get('name')
-        self._info["version"] = info.get('version')
-        self._info["author"] = info.get('author')
+        self._info["name"] = info.get("name")
+        self._info["version"] = info.get("version")
+        self._info["author"] = info.get("author")
 
     @staticmethod
     def _ref_questions(qna: List[QnA]):
-        ref_questions_unpacked = [item['q'] for item in qna]
+        ref_questions_unpacked = [item["q"] for item in qna]
         ref_questions = [item for elem in ref_questions_unpacked for item in elem]
 
         ref_questions_idx = list()
@@ -98,7 +94,7 @@ class QnAKnowledgeBase:
 
         """
         if self.cache and self._is_loaded:
-            return self._cache_data['qna']
+            return self._cache_data["qna"]
         else:
             return self._load(filepath_or_buffer=self.filepath_or_buffer)["qna"]
 
@@ -108,7 +104,7 @@ class QnAKnowledgeBase:
 
         """
         if self.cache and self._is_loaded:
-            return self._cache_data['idk_answers']
+            return self._cache_data["idk_answers"]
         else:
             return self._load(filepath_or_buffer=self.filepath_or_buffer)["idk_answers"]
 
@@ -118,9 +114,11 @@ class QnAKnowledgeBase:
 
         """
         if self.cache and self._is_loaded:
-            return self._cache_data['ref_questions']
+            return self._cache_data["ref_questions"]
         else:
-            return self._ref_questions(self._load(filepath_or_buffer=self.filepath_or_buffer)["qna"])[0]
+            return self._ref_questions(
+                self._load(filepath_or_buffer=self.filepath_or_buffer)["qna"]
+            )[0]
 
     @property
     def ref_questions_idx(self) -> List[int]:
@@ -128,9 +126,11 @@ class QnAKnowledgeBase:
 
         """
         if self.cache and self._is_loaded:
-            return self._cache_data['ref_questions_idx']
+            return self._cache_data["ref_questions_idx"]
         else:
-            return self._ref_questions(self._load(filepath_or_buffer=self.filepath_or_buffer)["qna"])[1]
+            return self._ref_questions(
+                self._load(filepath_or_buffer=self.filepath_or_buffer)["qna"]
+            )[1]
 
     def run_editor(self):
         """Opens the knowledge base editor app in the web browser.
@@ -141,7 +141,11 @@ class QnAKnowledgeBase:
         editor(self.filepath_or_buffer)
 
     def __repr__(self):
-        return "<QnAKnowledgeBase(name='%s', author='%s', version=%s)>" % (self.name, self.author, self.version)
+        return "<QnAKnowledgeBase(name='%s', author='%s', version=%s)>" % (
+            self.name,
+            self.author,
+            self.version,
+        )
 
 
 def editor(file_path: FilePath) -> None:
@@ -151,4 +155,8 @@ def editor(file_path: FilePath) -> None:
         file_path (FilePath): Knowledge base file path.
 
     """
-    subprocess.run(f"streamlit run {KNOWLEDGE_BASE_EDITOR_FILE_PATH} {file_path}", shell=True, check=True)
+    subprocess.run(
+        f"streamlit run {KNOWLEDGE_BASE_EDITOR_FILE_PATH} {file_path}",
+        shell=True,
+        check=True,
+    )
