@@ -10,12 +10,12 @@ class QnA(TypedDict):
     a: List[str]
 
 
-class QnAKBMapping(TypedDict):
+class QnAKbMapping(TypedDict):
     qna: List[QnA]
     idk_answers: List[str]
 
 
-class QnAKBMappingExtra(TypedDict):
+class QnAKbMappingExtra(TypedDict):
     qna: List[QnA]
     idk_answers: List[str]
     ref_questions: List[str]

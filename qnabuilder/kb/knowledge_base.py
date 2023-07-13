@@ -5,7 +5,7 @@ from typing import List
 from .._utils import check_type_error
 from ._const import KNOWLEDGE_BASE_EDITOR_FILE_PATH
 from ._exceptions import KnowledgeBaseSchemaError
-from ._types import FilePath, QnA, QnAKBMapping, QnAKBMappingExtra
+from ._types import FilePath, QnA, QnAKbMapping, QnAKbMappingExtra
 
 
 class QnAKnowledgeBase:
@@ -17,7 +17,7 @@ class QnAKnowledgeBase:
         "author": None
     }
 
-    _cache_data: QnAKBMappingExtra = {
+    _cache_data: QnAKbMappingExtra = {
         "qna": None,
         "idk_answers": None,
         "ref_questions": None,
@@ -35,7 +35,7 @@ class QnAKnowledgeBase:
         self.filepath_or_buffer = filepath_or_buffer
         self.cache = cache
 
-    def _load(self, filepath_or_buffer: FilePath) -> QnAKBMapping:
+    def _load(self, filepath_or_buffer: FilePath) -> QnAKbMapping:
         with open(filepath_or_buffer, "r") as file:
             kb: dict = json.load(file)
 
@@ -45,7 +45,7 @@ class QnAKnowledgeBase:
 
         if self.cache:
             ref_questions, ref_questions_idx = self._ref_questions(kb["qna"])
-            _cache_data: QnAKBMappingExtra = {
+            _cache_data: QnAKbMappingExtra = {
                 "qna": kb["qna"],
                 "idk_answers": kb["idk_answers"],
                 "ref_questions": ref_questions,
