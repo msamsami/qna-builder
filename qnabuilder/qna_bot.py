@@ -19,6 +19,7 @@ from sklearn.metrics.pairwise import (
 
 from .kb import QnAKnowledgeBase, FilePath, DEFAULT_KNOWLEDGE_BASE_FILE_PATH
 from ._enums import EmbeddingModel, SimilarityMetric
+from ._utils import value_error_message
 
 
 similarity = {
@@ -71,7 +72,9 @@ class QnABot:
         elif model_name == "count":
             return CountVectorizer(**kwargs)
         else:
-            return None
+            raise ValueError(
+                value_error_message("model_name", model_name, [e.value for e in EmbeddingModel])
+            )
 
     def fit(
         self, kb: Union[FilePath, QnAKnowledgeBase] = DEFAULT_KNOWLEDGE_BASE_FILE_PATH
