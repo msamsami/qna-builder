@@ -18,7 +18,7 @@ from sklearn.metrics.pairwise import (
 )
 
 from .kb import QnAKnowledgeBase, FilePath, DEFAULT_KNOWLEDGE_BASE_FILE_PATH
-from ._enum import EmbeddingModel, SimilarityMetric
+from ._enums import EmbeddingModel, SimilarityMetric
 
 
 similarity = {

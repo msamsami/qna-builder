@@ -16,5 +16,5 @@ __all__ = [
 
 
 from .qna_bot import QnABot
-from ._enum import EmbeddingModel, SimilarityMetric
+from ._enums import EmbeddingModel, SimilarityMetric
 from .kb import QnAKnowledgeBase, DEFAULT_KNOWLEDGE_BASE_FILE_PATH
