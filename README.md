@@ -7,7 +7,7 @@
 ![](https://img.shields.io/pypi/dm/qna-builder)
 
 <p>
-<img src="https://raw.githubusercontent.com/msamsami/qna-builder/main/logo.jpg" alt="QnA Builder logo" width="200"/>
+<img src="https://raw.githubusercontent.com/msamsami/qna-builder/main/docs/logo.jpg" alt="QnA Builder logo" width="200"/>
 <br>
 </p>
 
@@ -80,7 +80,7 @@ kb.run_editor()
 Here, you can see a screenshot of the knowledge base editor:
 
 <div style="text-align:center">
-<img src="docs/kb_editor.png" alt="QnA Bot Knowledge Base Editor" width="450"/>
+<img src="https://raw.githubusercontent.com/msamsami/qna-builder/main/docs/kb_editor.png" alt="QnA Bot Knowledge Base Editor" width="450"/>
 </div>
 
 Note that you need to install the optional requirement [streamlit](https://streamlit.io/) to be able to use the
