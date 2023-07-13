@@ -22,14 +22,6 @@ from ._enums import EmbeddingModel, SimilarityMetric
 from ._utils import value_error_message
 
 
-similarity = {
-    "cosine": cosine_similarity,
-    "euclidean": euclidean_distances,
-    "manhattan": manhattan_distances,
-    "haversine": haversine_distances,
-}
-
-
 class QnABot:
     _is_fitted: bool = False
     _model_kwargs: dict = {}
@@ -73,7 +65,9 @@ class QnABot:
             return CountVectorizer(**kwargs)
         else:
             raise ValueError(
-                value_error_message("model_name", model_name, [e.value for e in EmbeddingModel])
+                value_error_message(
+                    "model_name", model_name, [e.value for e in EmbeddingModel]
+                )
             )
 
     def fit(
@@ -104,6 +98,25 @@ class QnABot:
         self._is_fitted = True
         return self
 
+    def _similarity_function(self):
+        functions = {
+            "cosine": cosine_similarity,
+            "euclidean": euclidean_distances,
+            "manhattan": manhattan_distances,
+            "haversine": haversine_distances,
+        }
+
+        if self.similarity_metric not in functions:
+            raise ValueError(
+                value_error_message(
+                    "similarity_metric",
+                    self.similarity_metric,
+                    [e.value for e in SimilarityMetric],
+                )
+            )
+        else:
+            return functions[self.similarity_metric]
+
     def find_similarity(self, input: str) -> Tuple[int, float]:
         """Returns the index and similarity score of the question in the knowledge base most similar to the input.
 
@@ -126,7 +139,7 @@ class QnABot:
         input_embeddings = self.model_.transform([input])
 
         # Calculate the similarities between the input embedding and the reference embeddings
-        similarities = similarity[self.similarity_metric](
+        similarities = self._similarity_function(
             input_embeddings, self.ref_embeddings_
         ).flatten()
 
