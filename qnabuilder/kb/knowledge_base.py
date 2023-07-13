@@ -45,7 +45,7 @@ class QnAKnowledgeBase:
 
         if self.cache:
             ref_questions, ref_questions_idx = self._ref_questions(kb["qna"])
-            _cache_data: QnAKbMappingExtra = {
+            self._cache_data: QnAKbMappingExtra = {
                 "qna": kb["qna"],
                 "idk_answers": kb["idk_answers"],
                 "ref_questions": ref_questions,
